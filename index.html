@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Fake Virus Prank with Sound</title>
+<style>
+  html, body {
+    margin: 0; padding: 0;
+    height: 100%;
+    background: black;
+    color: #00FF00;
+    font-family: 'Courier New', Courier, monospace;
+    overflow: hidden;
+  }
+
+  #container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background: black;
+    overflow: hidden;
+  }
+
+  #message {
+    position: absolute;
+    top: 30%;
+    width: 100%;
+    text-align: center;
+    font-size: 2.5em;
+    text-shadow:
+      0 0 5px #00ff00,
+      0 0 10px #00ff00,
+      0 0 20px #00ff00,
+      0 0 40px #00ff00;
+    user-select: none;
+  }
+
+  #glitchOverlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  .glitchBlock {
+    position: absolute;
+    background: #00ff00;
+    opacity: 0.1;
+    filter: blur(1px);
+  }
+
+  /* Screen flicker animation */
+  @keyframes flicker {
+    0%, 100% {opacity: 1;}
+    50% {opacity: 0.3;}
+  }
+
+  #container.flicker {
+    animation: flicker 0.1s infinite;
+  }
+
+  /* Shaking text */
+  @keyframes shake {
+    0% {transform: translate(0, 0);}
+    20% {transform: translate(-3px, 3px);}
+    40% {transform: translate(3px, -3px);}
+    60% {transform: translate(-3px, -3px);}
+    80% {transform: translate(3px, 3px);}
+    100% {transform: translate(0, 0);}
+  }
+
+  #message.shake {
+    animation: shake 0.2s infinite;
+  }
+</style>
+</head>
+<body>
+
+<div id="container">
+  <div id="message"></div>
+  <div id="glitchOverlay"></div>
+</div>
+
+<audio id="bgSound" loop autoplay>
+  <source src="https://actions.google.com/sounds/v1/alarms/bugle_tune_short.ogg" type="audio/ogg">
+  <source src="https://actions.google.com/sounds/v1/alarms/bugle_tune_short.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+
+<script>
+  const messages = [
+    "WARNING: TRAPKING ERA☠️",
+    "SYSTEM COMPROMISED⚠️",
+    "INITIALIZING DATA CORRUPTION...",
+    "ENCRYPTING FILES...",
+    "SYSTEM FAILURE IMMINENT",
+    "PLEASE WAIT...",
+    "ERROR: ACCESS GRANTED",
+    "MALWARE INJECTION COMPLETE",
+    "YOU'VE BEEN HACKED",
+    "REBOOT REQUIRED", 
+    
+  ];
+
+  const container = document.getElementById('container');
+  const messageDiv = document.getElementById('message');
+  const glitchOverlay = document.getElementById('glitchOverlay');
+  const bgSound = document.getElementById('bgSound');
+
+  bgSound.volume = 0.15; // low volume to keep it subtle
+
+  // Typing effect for messages
+  let messageIndex = 0;
+  let charIndex = 0;
+
+  function typeMessage() {
+    if (messageIndex >= messages.length) {
+      messageIndex = 0;
+    }
+    let currentMsg = messages[messageIndex];
+    if (charIndex < currentMsg.length) {
+      messageDiv.textContent += currentMsg.charAt(charIndex);
+      charIndex++;
+      setTimeout(typeMessage, 80);
+    } else {
+      setTimeout(() => {
+        // Clear message and go to next
+        messageDiv.textContent = '';
+        charIndex = 0;
+        messageIndex++;
+        typeMessage();
+      }, 1500);
+    }
+  }
+
+  // Screen flicker toggle
+  function flickerScreen() {
+    container.classList.toggle('flicker');
+    setTimeout(flickerScreen, 300 + Math.random() * 700);
+  }
+
+  // Text shake toggle
+  function toggleShake() {
+    if (Math.random() < 0.5) {
+      messageDiv.classList.add('shake');
+    } else {
+      messageDiv.classList.remove('shake');
+    }
+    setTimeout(toggleShake, 300);
+  }
+
+  // Create random glitch blocks
+  function glitchBlocks() {
+    // Remove old blocks
+    glitchOverlay.innerHTML = '';
+
+    let blocksCount = 15 + Math.floor(Math.random() * 15);
+    for (let i = 0; i < blocksCount; i++) {
+      let block = document.createElement('div');
+      block.classList.add('glitchBlock');
+
+      block.style.width = (5 + Math.random() * 20) + 'px';
+      block.style.height = (5 + Math.random() * 20) + 'px';
+
+      block.style.top = Math.random() * 100 + 'vh';
+      block.style.left = Math.random() * 100 + 'vw';
+
+      block.style.opacity = 0.05 + Math.random() * 0.2;
+
+      glitchOverlay.appendChild(block);
+    }
+
+    setTimeout(glitchBlocks, 150);
+  }
+
+  // Start all effects
+  typeMessage();
+  flickerScreen();
+  toggleShake();
+  glitchBlocks();
+</script>
+
+</body>
+</html>
